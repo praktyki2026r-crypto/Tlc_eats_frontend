@@ -1,43 +1,72 @@
+import { useState, useEffect } from "react"
 import Banner from "./Banner"
+import { getUserOrderHistory } from "../api"
 
-function OrdersHistory(){
-  const orders = [
-    {order_number: 69, date: '11.09.2001', hour: '21:37', status: 'fucked', cost: 67},
-    {order_number: 66, date: '09.11.1002', hour: '21:37', status: 'unfucked', cost: 140}
-  ]
+function OrdersHistory() {
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  return(
+  useEffect(() => {
+    getUserOrderHistory()
+      .then(data => {
+        if (Array.isArray(data)) {
+          setOrders(data)
+        } else {
+          setError('Błąd pobierania historii')
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  return (
     <>
       <Banner />
       <div className="history-container">
         <div>
           <h1>Historia zamówień</h1>
-          <table>
-            <thead>
-              <tr>
-                <th>Numer zamówienia</th>
-                <th>Data</th>
-                <th>Godina</th>
-                <th>Status</th>
-                <th>Cena</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                orders.map((element) => (
-                  <tr>
-                    <td>{element.order_number}</td>
-                    <td>{element.date}</td>
-                    <td>{element.hour}</td>
-                    <td>{element.status}</td>
-                    <td>{element.cost}</td>
+
+          {loading && <p>Ładowanie...</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {!loading && orders.length === 0 && (
+            <p style={{ opacity: 0.5 }}>Brak historii zamówień</p>
+          )}
+
+          {orders.length > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>Numer zamówienia</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Dania</th>
+                  <th>Cena</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(userOrder => (
+                  <tr key={userOrder.id}>
+                    <td>{userOrder.id}</td>
+                    <td>{userOrder.order?.deadline
+                      ? new Date(userOrder.order.deadline).toLocaleDateString('pl-PL')
+                      : '-'}
+                    </td>
+                    <td>{userOrder.status}</td>
+                    <td>
+                      {userOrder.items?.map(item => (
+                        <p key={item.id} style={{ margin: 0, fontSize: '0.85rem' }}>
+                          {item.menu_item} x{item.quantity}
+                        </p>
+                      ))}
+                    </td>
+                    <td>{userOrder.total} zł</td>
                   </tr>
-                ))
-              }
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-        <img src="/images/orders-histiory-graphic.svg" alt="pgraphic" height={600} />
+        <img src="/images/orders-histiory-graphic.svg" alt="graphic" height={600} />
       </div>
     </>
   )
