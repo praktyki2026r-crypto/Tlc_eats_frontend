@@ -3,20 +3,24 @@ import Cart from "./Cart"
 import ProductsList from "./ProductsList"
 import { useState } from "react"
 
-function Order(){
+function Order({ currentUser }) {
   const [orders, setOrders] = useState([])
   const cost = orders.reduce((sum, el) => sum + el.cost, 0)
 
-  function addToOrders(order){
+  function addToOrders(order) {
     setOrders(prev => [...prev, order])
   }
 
-  return(
+  function removeFromOrders(index) {
+    setOrders(prev => prev.filter((_, i) => i !== index))
+  }
+
+  return (
     <>
       <Banner />
       <div className='orderPage'>
         <ProductsList onAdd={addToOrders} />
-        <Cart orders={orders} cost={cost} />
+        <Cart orders={orders} cost={cost} onRemove={removeFromOrders} />
       </div>
     </>
   )
