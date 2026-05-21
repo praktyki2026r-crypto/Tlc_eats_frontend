@@ -7,7 +7,7 @@ function CreatingOrders(){
             <Banner />
             <div className='co-container'>
                 <div className="dark-blob">
-                    <div className="content">
+                    <div className="content2">
                         <h2>Utwórz zamówienie</h2>
                         <input type="text" />
                         <input type="text" />
