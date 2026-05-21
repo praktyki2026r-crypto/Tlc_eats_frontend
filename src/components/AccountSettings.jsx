@@ -69,7 +69,7 @@ function AccountSettings({ currentUser, onLogOut }) {
     setPasswordMsg('')
     const result = await changePassword(oldPassword, newPassword)
     if (result?.message) {
-      setPasswordMsg('✅ Hasło zmienione!')
+      setPasswordMsg('Hasło pomyślnie zmienione!')
       setOldPassword('')
       setNewPassword('')
       setErrors({})
