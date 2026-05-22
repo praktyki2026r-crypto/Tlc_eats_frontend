@@ -7,14 +7,19 @@ function CreatingOrders(){
             <Banner />
             <div className='co-container'>
                 <div className="dark-blob">
-                    <div className="content2">
-                        <h2>Utwórz zamówienie</h2>
-                        <input type="text" />
-                        <input type="text" />
-                        <input type="text" />
-                        <button></button>
+                    <div className="form">
+                        <h2>Utwórz sesję</h2>
+                        <label htmlFor="">Data</label>
+                        <input type="date" />
+                        <label htmlFor="">Godzina rozpoczęcia</label>
+                        <input type="time" />
+                        <label htmlFor="">Godzina zakończenia</label>
+                        <input type="time" />
+                        <button>Rozpocznij <br /> sesję</button>
                     </div>
                 </div>
+                <img className='the-absolute-image' src="/images/create-orders-blob-icons.svg" alt="" />
+                <img className='another-set-of-icons' src="/images/ihavenoideahowtonameit.svg" alt="xd" />
             </div>
         </>
     )
