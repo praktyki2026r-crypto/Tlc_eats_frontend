@@ -1,6 +1,7 @@
 import Show_Products from "./ShowProducts"
 import Product_Popup from "./ProductPopup"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { getActiveOrder } from "../api"
 
 const CATEGORIES = ['WSZYSTKO', 'PIZZA', 'BURGERY', 'SAŁATKI', 'ZUPY', 'MAKARONY', 'NAPOJE']
 
@@ -8,13 +9,22 @@ function ProductsList({ onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('WSZYSTKO')
+  const [allRestaurants, setAllRestaurants] = useState(false)
+
+  useEffect(() => {
+    getActiveOrder().then(data => {
+      if (data && data.id) {
+        setAllRestaurants(data.all_restaurants)
+      }
+    })
+  }, [])
 
   return (
     <div className="products">
       <div className="browser">
         <input
           type="text"
-          placeholder='Wyszukaj restaurację lub danie'
+          placeholder={allRestaurants ? 'Wyszukaj restaurację i dania' : 'Wyszukaj dania'}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />

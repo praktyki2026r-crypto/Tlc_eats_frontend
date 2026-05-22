@@ -57,24 +57,39 @@
     align-content: center;
     align-items: center;
     z-index: 2;
+    
     box-shadow: 100px 0px 30px -15px rgba(173, 59, 206, 0.35);
 }
 
-.content2{
+.form2{
     margin-left: 1265px;
     width: 400px;
     gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
 }
 
-.content2 h2{
+.form2 h2{
     padding: 15px;
     color: white;
     font-size: 33px;
+    text-align: center;
 }
 
-.content2 input{
+.form2 input{
     background: #dfdde5;
     height: 50px;
+    color: #3c3c3c;
+}
+
+.form2 select{
+    padding: 15px 10px;
+    width: 100%;
+    border-radius: 15px;
+    background: #dfdde5;
+    color: #3c3c3c;
 }
 
 label{

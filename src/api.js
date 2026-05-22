@@ -122,9 +122,10 @@ export async function getActiveOrder() {
   return request('/orders/active/')
 }
 
-export async function createOrder(restaurantId, startTime, deadline) {
+export async function createOrder(restaurantId, startTime, deadline, allRestaurants = false) {
   return request('/orders/', 'POST', {
-    restaurant: restaurantId,
+    restaurant: allRestaurants ? null : restaurantId,
+    all_restaurants: allRestaurants,
     start_time: startTime,
     deadline: deadline,
     price: 0

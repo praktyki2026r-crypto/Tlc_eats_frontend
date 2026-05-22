@@ -1,25 +1,29 @@
 import { useState, useEffect } from "react"
-import { getRestaurants } from "../api"
+import { getRestaurants, getActiveOrder } from "../api"
 
 function Show_Products({ onProductClick, searchQuery, activeCategory }) {
   const [restaurants, setRestaurants] = useState([])
+  const [activeOrder, setActiveOrder] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    getRestaurants()
-      .then(data => {
-        if (Array.isArray(data)) {
-          setRestaurants(data)
-        } else {
-          setError('Błąd pobierania danych')
-        }
-      })
-      .finally(() => setLoading(false))
+    Promise.all([getRestaurants(), getActiveOrder()]).then(([restaurantsData, orderData]) => {
+      if (Array.isArray(restaurantsData)) setRestaurants(restaurantsData)
+      else setError('Błąd pobierania danych')
+      if (orderData && orderData.id) setActiveOrder(orderData)
+    }).finally(() => setLoading(false))
   }, [])
 
-  // zbierz wszystkie dania ze wszystkich restauracji
-  const allItems = restaurants.flatMap(restaurant =>
+  // filtruj restauracje po aktywnym zamówieniu
+  const filteredRestaurants = activeOrder
+    ? activeOrder.all_restaurants
+      ? restaurants
+      : restaurants.filter(r => r.id === activeOrder.restaurant)
+    : restaurants
+
+  // zbierz wszystkie dania
+  const allItems = filteredRestaurants.flatMap(restaurant =>
     restaurant.categories.flatMap(category =>
       category.menu_items.map(item => ({
         ...item,
@@ -56,7 +60,9 @@ function Show_Products({ onProductClick, searchQuery, activeCategory }) {
         <div className='wrapper' key={`${item.restaurantId}-${item.id}`}>
           <div className="dawheel"></div>
           <div className="product">
-            <p style={{ fontSize: '0.75rem', opacity: 0.6 }}>{item.restaurantName}</p>
+            {activeOrder?.all_restaurants && (
+              <p style={{ fontSize: '0.75rem', opacity: 0.6 }}>{item.restaurantName}</p>
+            )}
             <h2>{item.name}</h2>
             <div className="info">
               <div>
