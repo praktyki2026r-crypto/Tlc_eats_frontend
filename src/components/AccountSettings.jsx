@@ -56,9 +56,9 @@ function AccountSettings({ currentUser, onLogOut }) {
       last_name: lastName,
     })
     if (result?.id || result?.email) {
-      setProfileMsg('✅ Dane zaktualizowane!')
+      setProfileMsg(' Dane zaktualizowane!')
     } else {
-      setProfileMsg('❌ Błąd aktualizacji!')
+      setProfileMsg(' Błąd aktualizacji!')
     }
     setLoading(false)
   }
