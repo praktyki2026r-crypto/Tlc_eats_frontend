@@ -9,6 +9,7 @@ import AccountSettings from './components/AccountSettings'
 import OrdersHistory from './components/OrdersHistory'
 import AdminMain from './components/admin-views/AdminMain'
 import CreatingOrders from './components/admin-views/CreatingOrders'
+import ManageOrders from './components/admin-views/ManageOrders'
 
 function App() {
   const [isSignedIn, setIsSignedIn] = useState(false)
@@ -52,6 +53,7 @@ function App() {
             ? (isAdmin ? <AdminMain /> : <HomePage />)
             : <LoginAndRegister onLogin={HandleLogin} />}
         />
+        <Route path='/manage-orders' element={isAdmin ? <ManageOrders /> : <Navigate to='/' />} />
         <Route path='/order' element={isSignedIn ? <Order currentUser={currentUser} /> : <Navigate to='/' />} />
         <Route path='/account' element={isSignedIn ? <AccountSettings currentUser={currentUser} onLogOut={HandleLogOut} /> : <Navigate to='/' />} />
         <Route path='/history' element={isSignedIn ? <OrdersHistory /> : <Navigate to='/' />} />
