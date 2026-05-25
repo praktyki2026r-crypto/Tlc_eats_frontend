@@ -177,3 +177,137 @@ th{
 td button{
     margin: 0px;
 }
+
+/* manage orders */
+
+.mo-container {
+    display: flex;
+    min-height: calc(100vh - 80px);
+    background: white;
+    flex-wrap: wrap;
+}
+
+.mo-left {
+    width: 65%;
+    min-width: 300px;
+    padding: clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+}
+
+.mo-title {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.mo-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.mo-table th {
+    background: #ebaafa;
+    padding: clamp(8px, 2vw, 15px) clamp(10px, 2vw, 20px);
+    border: 3px solid black;
+    font-size: clamp(11px, 1.2vw, 14px);
+}
+
+.mo-table td {
+    padding: clamp(10px, 2vw, 20px);
+    border: 3px solid black;
+    text-align: center;
+    font-weight: bold;
+    font-size: clamp(11px, 1.2vw, 14px);
+}
+
+.mo-table tbody tr:hover {
+    background: #dfdde5;
+}
+
+.mo-right {
+    width: 35%;
+    min-width: 280px;
+    background: #3c3c3c;
+    padding: clamp(20px, 3vw, 40px) clamp(15px, 3vw, 30px);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    text-align: center;
+}
+
+.mo-head {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.mo-head h2 {
+    color: white;
+    font-size: clamp(18px, 2.5vw, 28px);
+}
+
+.mo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.mo-form input {
+    padding: clamp(10px, 1.5vw, 18px) clamp(10px, 2vw, 20px);
+    border-radius: 12px;
+    border: none;
+    background: #dfdde5;
+    font-size: clamp(13px, 1.2vw, 16px);
+    color: #3c3c3c;
+    font-family: inherit;
+    height: 50px;
+    width: 80%;
+}
+
+.mo-btn-edit {
+    padding: clamp(10px, 1.5vw, 15px);
+    border-radius: 12px;
+    border: none;
+    background: #862c9e;
+    color: white;
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 50%;
+}
+
+.mo-btn-close {
+    padding: clamp(10px, 1.5vw, 15px);
+    border-radius: 12px;
+    border: none;
+    background: #862c9e;
+    color: white;
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: bold;
+    cursor: pointer;
+    width: 50%;
+}
+
+.mo-btn-edit:hover, .mo-btn-close:hover {
+    background: #6a2280;
+}
+
+@media (max-width: 768px) {
+    .mo-container {
+        flex-direction: column;
+    }
+    .mo-left {
+        width: 100%;
+    }
+    .mo-right {
+        width: 100%;
+    }
+}

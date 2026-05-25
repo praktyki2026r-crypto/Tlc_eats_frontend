@@ -164,3 +164,7 @@ export async function deleteOrderItem(userOrderId, itemId) {
 export async function deleteAccount() {
   return request('/profile/delete/', 'DELETE')
 }
+
+export async function updateOrder(orderId, data) {
+    return request(`/orders/${orderId}/`, 'PATCH', data)
+}
