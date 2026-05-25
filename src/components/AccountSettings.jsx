@@ -1,7 +1,6 @@
 import { useState } from "react"
 import Banner from "./Banner"
-import { updateProfile, changePassword, logout } from "../api"
-
+import { updateProfile, changePassword, logout, deleteAccount } from "../api"
 function validateName(value) {
   if (!value.trim()) return 'Pole nie może być puste'
   if (value.trim().length < 2) return 'Minimum 2 znaki'
@@ -84,6 +83,17 @@ function AccountSettings({ currentUser, onLogOut }) {
     onLogOut()
   }
 
+  async function HandleDeleteAccount() {
+    if (!window.confirm('Czy na pewno chcesz usunąć konto? Tej operacji nie można cofnąć!')) return
+    const result = await deleteAccount()
+    if (result?.message) {
+        await logout()
+        onLogOut()
+    } else {
+        alert('Błąd usuwania konta!')
+    }
+}
+
   return (
     <>
       <Banner />
@@ -163,7 +173,7 @@ function AccountSettings({ currentUser, onLogOut }) {
               Zalogowany jako: <strong>{currentUser?.email}</strong>
             </p>
             <button onClick={HandleLogOut}>Wyloguj</button>
-            <button className='delete'>Usuń konto</button>
+            <button className='delete' onClick={HandleDeleteAccount}>Usuń konto</button>
             <img src="/images/account-settings-graphic.svg" alt="cos tam" width={450} />
           </div>
         </div>

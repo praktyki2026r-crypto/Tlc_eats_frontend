@@ -8,6 +8,7 @@ function CreatingOrders() {
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
     const [restaurantId, setRestaurantId] = useState('')
+    const [allRestaurants, setAllRestaurants] = useState(false)
     const [restaurants, setRestaurants] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -15,17 +16,18 @@ function CreatingOrders() {
 
     useEffect(() => {
         getRestaurants().then(data => {
-            if (Array.isArray(data)) {
-                setRestaurants(data)
-            } else {
-                setError('Błąd pobierania restauracji')
-            }
+            if (Array.isArray(data)) setRestaurants(data)
+            else setError('Błąd pobierania restauracji')
         })
     }, [])
 
     async function HandleCreateOrder() {
-        if (!date || !startTime || !endTime || !restaurantId) {
+        if (!date || !startTime || !endTime) {
             setError('Uzupełnij wszystkie pola!')
+            return
+        }
+        if (!allRestaurants && !restaurantId) {
+            setError('Wybierz restaurację lub zaznacz wszystkie!')
             return
         }
         if (startTime >= endTime) {
@@ -35,15 +37,19 @@ function CreatingOrders() {
         setLoading(true)
         setError('')
         setSuccess('')
+
         const startDateTime = `${date}T${startTime}:00`
         const endDateTime = `${date}T${endTime}:00`
-        const result = await createOrder(restaurantId, startDateTime, endDateTime)
+
+        const result = await createOrder(restaurantId, startDateTime, endDateTime, allRestaurants)
+
         if (result && result.id) {
             setSuccess('Sesja utworzona pomyślnie!')
             setDate('')
             setStartTime('')
             setEndTime('')
             setRestaurantId('')
+            setAllRestaurants(false)
         } else {
             setError(result?.error || 'Błąd tworzenia sesji!')
         }
@@ -62,14 +68,29 @@ function CreatingOrders() {
                         <select
                             value={restaurantId}
                             onChange={e => setRestaurantId(e.target.value)}
+                            disabled={allRestaurants}
+                            style={{ opacity: allRestaurants ? 0.5 : 1 }}
                         >
-                            <option value=''> Wybierz restaurację</option>
+                            <option value=''>-- Wybierz restaurację --</option>
                             {restaurants.map(r => (
-                                <option key={r.id} value={r.id}>
-                                    {r.name}
-                                </option>
+                                <option key={r.id} value={r.id}>{r.name}</option>
                             ))}
                         </select>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0.5rem 0' }}>
+                            <input
+                                type="checkbox"
+                                id="allRestaurants"
+                                checked={allRestaurants}
+                                onChange={e => {
+                                    setAllRestaurants(e.target.checked)
+                                    if (e.target.checked) setRestaurantId('')
+                                }}
+                            />
+                            <label htmlFor="allRestaurants" style={{ margin: 0 }}>
+                                Wszystkie restauracje
+                            </label>
+                        </div>
 
                         <label>Data</label>
                         <input

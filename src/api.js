@@ -159,3 +159,7 @@ export async function getUserOrderHistory() {
 export async function deleteOrderItem(userOrderId, itemId) {
   return request(`/user-orders/${userOrderId}/items/${itemId}/delete/`, 'DELETE')
 }
+
+export async function deleteAccount() {
+  return request('/profile/delete/', 'DELETE')
+}
