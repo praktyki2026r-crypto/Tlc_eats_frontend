@@ -29,6 +29,7 @@ async function request(endpoint, method = 'GET', body = null) {
     }
   }
 
+  if (response.status === 204) return { message: 'ok' }
   return response.json()
 }
 
