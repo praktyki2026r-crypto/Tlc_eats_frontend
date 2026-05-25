@@ -13,6 +13,11 @@ function CreatingOrders() {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+
+    const selectedLabel = allRestaurants
+        ? 'Wszystkie restauracje'
+        : restaurants.find(r => r.id == restaurantId)?.name || 'Wybierz restaurację'
 
     useEffect(() => {
         getRestaurants().then(data => {
@@ -27,7 +32,7 @@ function CreatingOrders() {
             return
         }
         if (!allRestaurants && !restaurantId) {
-            setError('Wybierz restaurację lub zaznacz wszystkie!')
+            setError('Wybierz restaurację!')
             return
         }
         if (startTime >= endTime) {
@@ -37,12 +42,9 @@ function CreatingOrders() {
         setLoading(true)
         setError('')
         setSuccess('')
-
         const startDateTime = `${date}T${startTime}:00`
         const endDateTime = `${date}T${endTime}:00`
-
         const result = await createOrder(restaurantId, startDateTime, endDateTime, allRestaurants)
-
         if (result && result.id) {
             setSuccess('Sesja utworzona pomyślnie!')
             setDate('')
@@ -65,31 +67,59 @@ function CreatingOrders() {
                         <h2>Utwórz sesję</h2>
 
                         <label>Restauracja</label>
-                        <select
-                            value={restaurantId}
-                            onChange={e => setRestaurantId(e.target.value)}
-                            disabled={allRestaurants}
-                            style={{ opacity: allRestaurants ? 0.5 : 1 }}
-                        >
-                            <option value=''>-- Wybierz restaurację --</option>
-                            {restaurants.map(r => (
-                                <option key={r.id} value={r.id}>{r.name}</option>
-                            ))}
-                        </select>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0.5rem 0' }}>
-                            <input
-                                type="checkbox"
-                                id="allRestaurants"
-                                checked={allRestaurants}
-                                onChange={e => {
-                                    setAllRestaurants(e.target.checked)
-                                    if (e.target.checked) setRestaurantId('')
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <div
+                                onClick={() => setDropdownOpen(p => !p)}
+                                style={{
+                                    fontFamily: 'inherit',
+                                    padding: '15px 10px',
+                                    borderRadius: '15px',
+                                    background: '#dfdde5',
+                                    color: '#3c3c3c',
+                                    cursor: 'pointer',
+                                    userSelect: 'none'
                                 }}
-                            />
-                            <label htmlFor="allRestaurants" style={{ margin: 0 }}>
-                                Wszystkie restauracje
-                            </label>
+                            >
+                                {selectedLabel} ▼
+                            </div>
+                            {dropdownOpen && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    left: 0,
+                                    right: 0,
+                                    background: '#dfdde5',
+                                    borderRadius: '10px',
+                                    maxHeight: '175px',
+                                    overflowY: 'auto',
+                                    zIndex: 10,
+                                }}>
+                                    <div
+                                        onClick={() => { setRestaurantId(''); setAllRestaurants(false); setDropdownOpen(false) }}
+                                        style={{ padding: '10px 15px', cursor: 'pointer' }}
+                                    >
+                                        Wybierz restaurację 
+                                    </div>
+                                    <div
+                                        onClick={() => { setAllRestaurants(true); setRestaurantId(''); setDropdownOpen(false) }}
+                                        style={{ padding: '10px 15px', cursor: 'pointer'}}
+                                    >
+                                        Wszystkie restauracje
+                                    </div>
+                                    {[...restaurants]
+                                        .sort((a, b) => a.name.localeCompare(b.name, 'pl'))
+                                        .map(r => (
+                                            <div
+                                                key={r.id}
+                                                onClick={() => { setRestaurantId(r.id); setAllRestaurants(false); setDropdownOpen(false) }}
+                                                style={{ padding: '10px 15px', cursor: 'pointer' }}
+                                            >
+                                                {r.name}
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            )}
                         </div>
 
                         <label>Data</label>

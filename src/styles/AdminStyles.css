@@ -45,8 +45,14 @@
     margin-left: 70px;
     margin-top: 15px;
     width: 700px;
+    pointer-events: none;
 }
-
+.another-set-of-icons{
+    position: absolute;
+    z-index: 3;
+    margin-left: 815px;
+    pointer-events: none;
+}
 .dark-blob{
     position: absolute;
     background: #3c3c3c;
@@ -57,7 +63,6 @@
     align-content: center;
     align-items: center;
     z-index: 2;
-    
     box-shadow: 100px 0px 30px -15px rgba(173, 59, 206, 0.35);
 }
 
@@ -69,6 +74,8 @@
     flex-direction: column;
     gap: 5px;
     align-items: center;
+    position: relative;
+    z-index: 4;
 }
 
 .form2 h2{
@@ -90,6 +97,8 @@
     border-radius: 15px;
     background: #dfdde5;
     color: #3c3c3c;
+    size: 5;
+    overflow-y: auto;
 }
 
 label{
@@ -99,11 +108,6 @@ label{
     font-size: 12px;
 }
 
-.another-set-of-icons{
-    position: absolute;
-    z-index: 3;
-    margin-left: 815px;
-}
 
 .orders{
     display: flex;
