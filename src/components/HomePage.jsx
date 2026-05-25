@@ -41,7 +41,10 @@ function HomePage() {
                 <NavLink className="link" to="/order">ZŁÓŻ ZAMÓWIENIE</NavLink>
               </>
             ) : (
-              <p>Brak zamówienia grupowego</p>
+              <>
+                <p>Brak aktywnego zamówienia grupowego</p>
+                <NavLink className="link" to="/order" >PRZEGLĄDAJ MENU</NavLink>
+              </>
             )}
           </div>
         </div>
