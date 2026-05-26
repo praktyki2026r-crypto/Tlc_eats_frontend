@@ -168,3 +168,7 @@ export async function deleteAccount() {
 export async function updateOrder(orderId, data) {
     return request(`/orders/${orderId}/`, 'PATCH', data)
 }
+
+export async function getLastOrder() {
+    return request('/orders/last/')
+}

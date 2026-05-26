@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import Banner from "../Banner"
 import '../../styles/AdminStyles.css'
-import { getActiveOrder, closeOrder, updateOrder, getRestaurants } from "../../api"
+import { getActiveOrder, getLastOrder, closeOrder, updateOrder, getRestaurants } from "../../api"
 
 function ManageOrders() {
     const [activeOrder, setActiveOrder] = useState(null)
@@ -21,17 +21,28 @@ function ManageOrders() {
 
     async function fetchOrder() {
         setLoading(true)
-        const [order, restaurantsData] = await Promise.all([
+        const [activeOrderData, lastOrderData, restaurantsData] = await Promise.all([
             getActiveOrder(),
+            getLastOrder(),
             getRestaurants()
         ])
-        if (order && order.id) {
-            setActiveOrder(order)
-            setLastOrder(order)
-            setEditDate(order.start_time?.slice(0, 10) || '')
-            setEditStartTime(order.start_time?.slice(11, 16) || '')
-            setEditEndTime(order.deadline?.slice(11, 16) || '')
+
+        // aktywna sesja
+        if (activeOrderData && activeOrderData.id) {
+            setActiveOrder(activeOrderData)
+            setLastOrder(activeOrderData)
+            setEditDate(activeOrderData.start_time?.slice(0, 10) || '')
+            setEditStartTime(activeOrderData.start_time?.slice(11, 16) || '')
+            setEditEndTime(activeOrderData.deadline?.slice(11, 16) || '')
+        // brak aktywnej – pokaż ostatnią
+        } else if (lastOrderData && lastOrderData.id) {
+            setLastOrder(lastOrderData)
+            setSessionClosed(true)
+            setEditDate(lastOrderData.start_time?.slice(0, 10) || '')
+            setEditStartTime(lastOrderData.start_time?.slice(11, 16) || '')
+            setEditEndTime(lastOrderData.deadline?.slice(11, 16) || '')
         }
+
         if (Array.isArray(restaurantsData)) setRestaurants(restaurantsData)
         setLoading(false)
     }
