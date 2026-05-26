@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
-import { getMe, logout } from './api'
+import { getMe, logout, getActiveOrder } from './api'
 import LoginAndRegister from './components/LoginAndRegister'
 import HomePage from './components/HomePage'
 import Order from './components/Order'
@@ -15,6 +15,7 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [activeOrder, setActiveOrder] = useState(null)
   const isAdmin = currentUser?.is_initiator === true
 
   useEffect(() => {
@@ -24,6 +25,11 @@ function App() {
         if (data && data.id) {
           setCurrentUser(data)
           setIsSignedIn(true)
+          // sprawdź aktywne zamówienie
+          getActiveOrder().then(order => {
+            if (order && order.id) setActiveOrder(order)
+            else setActiveOrder(null)
+          })
         }
       }).finally(() => setLoading(false))
     } else {
@@ -34,12 +40,25 @@ function App() {
   function HandleLogin(user) {
     setCurrentUser(user)
     setIsSignedIn(true)
+    // sprawdź aktywne zamówienie po zalogowaniu
+    getActiveOrder().then(order => {
+      if (order && order.id) setActiveOrder(order)
+      else setActiveOrder(null)
+    })
   }
 
   async function HandleLogOut() {
     await logout()
     setCurrentUser(null)
     setIsSignedIn(false)
+    setActiveOrder(null)
+  }
+
+  function AdminHome() {
+    if (activeOrder && activeOrder.id) {
+      return <Navigate to='/manage-orders' />
+    }
+    return <Navigate to='/create-order' />
   }
 
   if (loading) return <div>Ładowanie...</div>
@@ -50,7 +69,7 @@ function App() {
         <Route
           path='/'
           element={isSignedIn
-            ? (isAdmin ? <AdminMain /> : <HomePage />)
+            ? (isAdmin ? <AdminHome /> : <HomePage />)
             : <LoginAndRegister onLogin={HandleLogin} />}
         />
         <Route path='/manage-orders' element={isAdmin ? <ManageOrders /> : <Navigate to='/' />} />

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../../styles/AdminStyles.css'
 import Banner from '../Banner'
 import { createOrder, getRestaurants } from '../../api'
 
 function CreatingOrders() {
+    const navigate = useNavigate()
     const [date, setDate] = useState('')
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
@@ -11,7 +13,6 @@ function CreatingOrders() {
     const [allRestaurants, setAllRestaurants] = useState(false)
     const [restaurants, setRestaurants] = useState([])
     const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
 
@@ -41,21 +42,15 @@ function CreatingOrders() {
         }
         setLoading(true)
         setError('')
-        setSuccess('')
         const startDateTime = `${date}T${startTime}:00`
         const endDateTime = `${date}T${endTime}:00`
         const result = await createOrder(restaurantId, startDateTime, endDateTime, allRestaurants)
         if (result && result.id) {
-            setSuccess('Sesja utworzona pomyślnie!')
-            setDate('')
-            setStartTime('')
-            setEndTime('')
-            setRestaurantId('')
-            setAllRestaurants(false)
+            navigate('/manage-orders')
         } else {
             setError(result?.error || 'Błąd tworzenia sesji!')
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     return (
@@ -98,11 +93,11 @@ function CreatingOrders() {
                                         onClick={() => { setRestaurantId(''); setAllRestaurants(false); setDropdownOpen(false) }}
                                         style={{ padding: '10px 15px', cursor: 'pointer' }}
                                     >
-                                        Wybierz restaurację 
+                                        Wybierz restaurację
                                     </div>
                                     <div
                                         onClick={() => { setAllRestaurants(true); setRestaurantId(''); setDropdownOpen(false) }}
-                                        style={{ padding: '10px 15px', cursor: 'pointer'}}
+                                        style={{ padding: '10px 15px', cursor: 'pointer' }}
                                     >
                                         Wszystkie restauracje
                                     </div>
@@ -144,7 +139,6 @@ function CreatingOrders() {
                         />
 
                         {error && <p style={{ color: 'red', fontSize: '0.85rem' }}>{error}</p>}
-                        {success && <p style={{ color: 'green', fontSize: '0.85rem' }}>{success}</p>}
 
                         <button onClick={HandleCreateOrder} disabled={loading}>
                             {loading ? 'Tworzenie...' : 'Rozpocznij sesję'}
