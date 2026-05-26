@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Banner from "../Banner"
 import '../../styles/AdminStyles.css'
 import { getActiveOrder, getLastOrder, closeOrder, updateOrder, getRestaurants } from "../../api"
+import { useNavigate } from "react-router-dom"
 
 function ManageOrders() {
     const [activeOrder, setActiveOrder] = useState(null)
@@ -13,6 +14,7 @@ function ManageOrders() {
     const [editDate, setEditDate] = useState('')
     const [editStartTime, setEditStartTime] = useState('')
     const [editEndTime, setEditEndTime] = useState('')
+    const navigate = useNavigate()
     const [sessionClosed, setSessionClosed] = useState(false)
 
     useEffect(() => {
@@ -75,16 +77,12 @@ function ManageOrders() {
     async function HandleCloseOrder() {
         if (!window.confirm('Czy na pewno chcesz zakończyć sesję?')) return
         if (!activeOrder) {
-            // sesja już zamknięta – czyścimy widok
-            setLastOrder(null)
-            setSessionClosed(false)
+            navigate('/create-order')
             return
         }
         const result = await closeOrder(activeOrder.id)
         if (result?.message) {
-            setSuccessMsg('Sesja zakończona!')
-            setSessionClosed(true)
-            setActiveOrder(null)
+            navigate('/create-order')
         } else {
             setError(result?.error || 'Błąd zamykania sesji!')
         }
@@ -200,14 +198,12 @@ function ManageOrders() {
                             disabled={sessionClosed}
                         />
 
-                        {!sessionClosed && (
-                            <button className="mo-btn-edit" onClick={HandleEditOrder}>
-                                Edytuj
-                            </button>
-                        )}
+                        <button className="mo-btn-edit" onClick={HandleEditOrder}>
+                            Edytuj
+                        </button>
 
                         <button className="mo-btn-close" onClick={HandleCloseOrder}>
-                            {sessionClosed ? 'WYCZYŚĆ WIDOK' : 'ZAKOŃCZ ZAMÓWIENIE'}
+                            ZAKOŃCZ ZAMÓWIENIE
                         </button>
                     </div>
                 </div>
