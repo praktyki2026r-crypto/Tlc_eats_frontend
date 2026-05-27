@@ -83,8 +83,14 @@ function Show_Products({ onProductClick, searchQuery, activeCategory }) {
                 className='showproduct'
                 onClick={() => onProductClick({
                   ...item,
-                  sizes: item.option_groups?.[0]?.options?.map(o => o.name) || [],
-                  ingredients: item.ingredients ? item.ingredients.split(',').map(s => s.trim()) : [],
+                  sizes: item.option_groups?.[0]?.options?.map(o => ({
+                    name: o.name,
+                    extra_price: parseFloat(o.extra_price),
+                    id: o.id,
+                  })) || [],
+                  ingredients: item.ingredients
+                    ? item.ingredients.split(',').map(s => s.trim()).filter(s => s)
+                    : [],
                   addons: [],
                   cost: parseFloat(item.price),
                 })}

@@ -1,53 +1,96 @@
 import { useState, useRef } from "react"
 import { In_Cart_Product } from "../assets/In_Cart_Product"
 
-function Product_Popup({ product, onClose, onAdd }){
-  const [selectedSize, setSelectedSize] = useState(null)
+function Product_Popup({ product, onClose, onAdd }) {
+  const firstSize = product.sizes?.length > 0 ? product.sizes[0] : null
+  const [selectedSize, setSelectedSize] = useState(firstSize)
   const noteRef = useRef(null)
 
-  function addProduct(){
-    if(!selectedSize){
-      alert("Wybierz rozmiar!")
-      return
-    }
+  const currentPrice = selectedSize
+    ? product.cost + (selectedSize.extra_price ?? 0)
+    : product.cost
 
-    const order = new In_Cart_Product(product.id, product.name, selectedSize, noteRef.current.value, product.cost)
-
+  function addProduct() {
+    const order = new In_Cart_Product(
+      product.id,
+      product.name,
+      selectedSize,
+      noteRef.current.value,
+      currentPrice
+    )
     onAdd(order)
     onClose()
   }
 
-  return(
+  const hasSizes = product.sizes && product.sizes.length > 0
+  const hasIngredients = product.ingredients && product.ingredients.length > 0
+  const hasAddons = product.addons && product.addons.length > 0
+
+  return (
     <>
       <div className="overlay-popup" onClick={onClose}></div>
       <div className="wrapper-popup">
         <div className="dawheel-popup"></div>
         <div className="product-popup">
-          <button className='close-btn' onClick={onClose}>✕</button>
+          <button className="close-btn" onClick={onClose}>✕</button>
           <h2>{product.name}</h2>
-          <p className='sizes'>Rozmiar:</p>
-          <ul>
-            {product.sizes.map((element) => (
-              <li key={element.id}><input type="radio" name='size' value={element} onChange={() => setSelectedSize(element) }/>{element}</li>
-            ))}
-          </ul>
-          <p className='sizes'>Składniki:</p>
-          <ul className='ul-decoration'>
-            {product.ingredients.map((element) => (
-              <li key={element.id}><p>{element}</p></li>
-            ))}
-          </ul>
-          <p className='sizes'>Personalizacja (wpisać w notatce):</p>
-          <ul className='ul-decoration'>
-            {product.addons.map((element) => (
-              <li key={element.id}>{element}</li>
-            ))}
-          </ul>
+
+          {hasSizes && (
+            <>
+              <p className="sizes">Rozmiar:</p>
+              <ul>
+                {product.sizes.map((element) => (
+                  <li key={element.name}>
+                    <input
+                      type="radio"
+                      name="size"
+                      value={element.name}
+                      defaultChecked={element === firstSize}
+                      onChange={() => setSelectedSize(element)}
+                    />
+                    {element.name}
+                    {element.extra_price > 0 && ` (+${element.extra_price} zł)`}
+                    {element.extra_price < 0 && ` (${element.extra_price} zł)`}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {hasIngredients && (
+            <>
+              <p className="sizes">Składniki:</p>
+              <ul className="ul-decoration">
+                {product.ingredients.map((element, i) => (
+                  <li key={i}><p>{element}</p></li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {hasAddons && (
+            <>
+              <p className="sizes">Personalizacja (wpisać w notatce):</p>
+              <ul className="ul-decoration">
+                {product.addons.map((element, i) => (
+                  <li key={i}>{element}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
           <p className="sizes">Notatka do zamówienia:</p>
-          <textarea className='note' ref={noteRef} />
-          <div className='info-popup'>
-            <h2>{product.cost} zł</h2>
-            <img src="/images/circle-plus-solid-full.svg" alt="plus" width={60} className='showproduct' onClick={addProduct} />
+          <textarea className="note" ref={noteRef} />
+
+          <div className="info-popup">
+            <h2>{currentPrice.toFixed(2)} zł</h2>
+            <img
+              src="/images/circle-plus-solid-full.svg"
+              alt="plus"
+              width={60}
+              className="showproduct"
+              onClick={addProduct}
+            />
           </div>
         </div>
       </div>

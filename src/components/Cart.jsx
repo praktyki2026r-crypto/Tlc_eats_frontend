@@ -30,7 +30,7 @@ function Cart({ orders, cost, onRemove }) {
         menu_item: order.id,
         quantity: 1,
         note: order.note || '',
-        selected_options: order.selectedOptions || [],
+        selected_options: order.size?.id ? [{ option: order.size.id }] : [],
       }))
 
       const result = await submitUserOrder(activeOrder.id, items)
