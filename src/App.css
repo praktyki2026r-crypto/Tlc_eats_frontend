@@ -331,6 +331,7 @@ main{
   }
 }
 
+/* popup */
 .wrapper-popup{
   position: fixed;
   top: 50%;
@@ -386,13 +387,13 @@ main{
 
 .product h2{
   padding: 0px;
-  font-size: 25px;
+  font-size: 18px;
   text-align: center;
 }
 
 .product-popup h2{
   padding: 0px;
-  font-size: 25px;
+  font-size: 30px;
   text-align: center;
 }
 
@@ -428,8 +429,10 @@ li input{
   font-size: 12px;
 }
 
+/* cena - text */
 .cost{
-  font-size: 25px;
+  margin-top: 10px;
+  font-size: 20px;
 }
 
 .info{
@@ -449,6 +452,7 @@ li input{
   margin-top: 5px;
 }
 
+/* notatka do zamowienia */
 .note{
   background: none;
   color: black;
