@@ -8,10 +8,9 @@ function Cart({ orders, cost, onRemove }) {
 
   async function HandleSubmit() {
     if (orders.length === 0) {
-      setError('Koszyk jest pusty!')
-      return
+        setError('Koszyk jest pusty!')
+        return
     }
-
     setLoading(true)
     setError('')
     setSuccess(false)
@@ -19,10 +18,10 @@ function Cart({ orders, cost, onRemove }) {
     try {
       // pobierz aktywne zamówienie grupowe
       const activeOrder = await getActiveOrder()
-      if (!activeOrder || activeOrder.message) {
-        setError('Brak aktywnego zamówienia grupowego!')
-        setLoading(false)
-        return
+      if (!activeOrder || activeOrder.message || !activeOrder.id) {
+          setError('Brak aktywnego zamówienia grupowego. Poczekaj aż inicjator utworzy sesję.')
+          setLoading(false)
+          return
       }
 
       // przygotuj items

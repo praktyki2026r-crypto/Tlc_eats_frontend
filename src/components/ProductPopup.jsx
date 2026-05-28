@@ -35,63 +35,67 @@ function Product_Popup({ product, onClose, onAdd }) {
           <button className="close-btn" onClick={onClose}>✕</button>
           <h2>{product.name}</h2>
 
-          {hasSizes && (
-            <>
-              <p className="sizes">Rozmiar:</p>
-              <ul>
-                {product.sizes.map((element) => (
-                  <li key={element.name}>
-                    <input
-                      type="radio"
-                      name="size"
-                      value={element.name}
-                      defaultChecked={element === firstSize}
-                      onChange={() => setSelectedSize(element)}
-                    />
-                    {element.name}
-                    {element.extra_price > 0 && ` (+${element.extra_price} zł)`}
-                    {element.extra_price < 0 && ` (${element.extra_price} zł)`}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+          <div className="product-popup-scroll">
+            {hasSizes && (
+              <>
+                <p className="sizes">Rozmiar:</p>
+                <ul>
+                  {product.sizes.map((element) => (
+                    <li key={element.name}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value={element.name}
+                        defaultChecked={element === firstSize}
+                        onChange={() => setSelectedSize(element)}
+                      />
+                      {element.name}
+                      {element.extra_price > 0 && ` (+${element.extra_price} zł)`}
+                      {element.extra_price < 0 && ` (${element.extra_price} zł)`}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
 
-          {hasIngredients && (
-            <>
-              <p className="sizes">Składniki:</p>
-              <ul className="ul-decoration">
-                {product.ingredients.map((element, i) => (
-                  <li key={i}><p>{element}</p></li>
-                ))}
-              </ul>
-            </>
-          )}
+            {hasIngredients && (
+              <>
+                <p className="sizes">Składniki:</p>
+                <ul className="ul-decoration">
+                  {product.ingredients.map((element, i) => (
+                    <li key={i}><p>{element}</p></li>
+                  ))}
+                </ul>
+              </>
+            )}
 
-          {hasAddons && (
-            <>
-              <p className="sizes">Personalizacja (wpisać w notatce):</p>
-              <ul className="ul-decoration">
-                {product.addons.map((element, i) => (
-                  <li key={i}>{element}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          <p className="sizes">Notatka do zamówienia:</p>
-          <textarea className="note" ref={noteRef} />
-
-          <div className="info-popup">
-            <h2>{currentPrice.toFixed(2)} zł</h2>
-            <img
-              src="/images/circle-plus-solid-full.svg"
-              alt="plus"
-              width={60}
-              className="showproduct"
-              onClick={addProduct}
-            />
+            {hasAddons && (
+              <>
+                <p className="sizes">Personalizacja (wpisać w notatce):</p>
+                <ul className="ul-decoration">
+                  {product.addons.map((element, i) => (
+                    <li key={i}>{element}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
+
+          <div className="product-popup-bottom">
+            <p className="sizes">Notatka do zamówienia:</p>
+            <textarea className="note" ref={noteRef} />
+            <div className="info-popup">
+              <h2>{currentPrice.toFixed(2)} zł</h2>
+              <img
+                src="/images/circle-plus-solid-full.svg"
+                alt="plus"
+                width={60}
+                className="showproduct"
+                onClick={addProduct}
+              />
+            </div>
+          </div>
+
         </div>
       </div>
     </>
